@@ -1,0 +1,396 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{REPORT}
+\author{MUKKU VAMSI KRISHNA REDDY-2019CS10374 && NALLA KHYATEESWAR NAIDU-2019CS10376}
+\date{March 2021}
+
+\usepackage{pgfplots}
+
+
+\begin{document}
+
+\maketitle
+
+\section{METRICS}
+    .
+    
+    I have used different definitions for utility.And used some common terms for all the methods which we can discuss here.
+    
+    queoriginal-------which contains queue density values of baseline.
+    
+	quemodified-------which contains queue density values of the obtained frames in the methods.
+	
+	error------------- average of absolute sum of the differnce between the rate of queue densities in queoriginal and quemodified.
+	
+	utility-----------1/error.(for method 1 and 2)
+	
+	utility-----------10-error.(for method 3 and 4)
+    
+\section{METHODS}
+.
+
+we will discuss the methods we have done in this .
+
+\subsection{Method1 (sub-sampling frames) }
+.
+
+x---- skip number.
+
+
+We have taken the values of the queoriginal by reading the text "baseline.txt"(which contains all quedensity values of baseline).
+
+We are reading the trafficvideo.mp4 and then taking the quedensity values of the frames b skipping x.(if we take Nth frame then we have taken N+x and not for between frames).
+
+After this we have to give utility.for that we have taken rates of quedensity of quemodified frames between N and N+x have same rate as of N+x.
+
+
+for runtime we have considered from the starting of video reading to the end of giving the utility.
+
+\subsection{Method2 (reduce resolution for each frame)}
+.
+
+X,Y-----image width and height respectively.
+
+
+We have taken the values of the queoriginal by reading the text "baseline.txt"(which contains all quedensity values of baseline).
+
+
+We are reading the traffic video and made the size of each frame to the x and y.
+
+
+And then calucalated utility with the given values of queoriginal and obtained values of the quemodified.
+
+
+For runtime we have considered from the starting of video reading to the end of giving the utility.
+
+\subsection{Method3 (split work spatially across threads)}
+.
+
+	x---- number of threads.
+	
+	
+	We have taken the values of the queoriginal by reading the text "baseline.txt"(which contains all quedensity values of baseline).
+	
+	
+	we are reading the traffic video and whenever we obtain a frame we have splitted the work of calucalating queue density for "x" different threads (ex: 1st thread calucalates 0th row ,x th row,2x th row.....)
+	
+	
+	Here as we are using the same frames and using same queue density rate formula for the queoriginal and quemodified.so error we will get zero.
+	
+	
+ 	for runtime we have considered from the starting of video reading to the end of giving the utility.
+ 	
+\subsection{Method4 (split work temporally across threads )}
+.
+
+	x---- number of threads.
+	
+	
+	We have taken the values of the queoriginal by reading the text "baseline.txt"(which contains all quedensity values of baseline).
+	
+	
+	We are reading the traffic video and we are taking the "x" framesat a time for the calucalation of the quedensity at the same time in those "x" threads.
+	
+	
+	Here as we are using the same frames and using same queue density rate formula for the queoriginal and quemodified.so error we will get zero.
+	
+	
+ 	for runtime we have considered from the starting of video reading to the end of giving the utility.
+ 	
+ 	
+\section{Trade-off Analysis }
+.
+
+Now lets get into the tablular data and graphical data.
+
+\subsection{method1}
+
+\subsubsection{TABLE}
+\begin{center}
+ \begin{tabular}{||c| c |c |c||} 
+ \hline
+ s.no &x & utility & time\\ [0.8ex] 
+ \hline\hline
+ 1&2 & 15.3438 & 121s\\ [0.5ex]
+ \hline
+ 2&3 &19.7083  & 120s\\[0.5ex]
+ \hline
+ 3&5 & 21.4851 & 116s\\[0.5ex]
+ \hline
+ 4&7 & 21.27  & 117s \\[0.5ex]
+ \hline
+ 5&10 & 21.3912 & 125s \\[0.5ex]
+ \hline
+ 6&20 & 21.6677 & 123s \\[0.5ex]
+ \hline
+ 7&30 & 21.7695 & 125s \\[0.5ex]
+ \hline
+ 8&40 & 21.684  & 127s \\[0.5ex]
+ \hline
+ 9&50 & 21.7691 & 116s \\[0.5ex]
+ \hline
+ 10&100 & 21.8113 & 125s\\ [0.5ex] 
+ \hline
+\end{tabular}
+\end{center}
+\subsubsection{GRAPH}
+\begin{tikzpicture}
+  \begin{axis}[
+    xmin=113, xmax=130,
+    ymin=10, ymax=25,
+    xlabel=$time$,
+    ylabel=$utility$
+  ]
+   
+    \addplot[
+    color=green,
+    mark=square,
+    ]
+    coordinates {
+    (116,21.4851)(116,21.7691)(117,21.27)(120,19.7083)(121,15.3438)(123,21.6677)(125,21.3912)(125,21.7695)(125,21.8113)(127,21.684)
+    
+    };
+    
+    
+    
+  \end{axis}
+\end{tikzpicture}
+
+\subsubsection{OBSERVATIONS}
+.
+
+    we can observe from the table that as x increases the runtime first decreases and then for some values it is increasing it is may be due to variation in the cpu utilization. And the utility is going to a saturation value.As utilization may or may not depend on the skip number we cannot comment on those values.
+    
+\subsection{method2}
+.
+
+\sububsection{TABLE}
+\begin{center}
+ \begin{tabular}{||c| c| c| c| c||} 
+ \hline
+ s.no&X. & Y. & utility &  time\\ [0.8ex] 
+ \hline\hline
+ 1&960 & 540 & 175.907 & 104s\\ [0.5ex]
+ \hline
+ 2&640&360 &140.636  & 99s\\[0.5ex]
+ \hline
+ 3&480& 270& 95.5367& 98s\\[0.5ex]
+ \hline
+ 4&384&216 & 80.4402 & 96s \\[0.5ex]
+ \hline
+ 5&320&180 & 64.6069 & 94s \\[0.5ex]
+ \hline
+ 6&240&135 & 47.4998 & 92s \\[0.5ex]
+ \hline
+\end{tabular}
+\end{center}
+
+\subsubsection{GRAPH}
+\begin{tikzpicture}
+  \begin{axis}[
+    xmin=90, xmax=110,
+    ymin=40, ymax=180,
+    xlabel=$time$,
+    ylabel=$utility$
+  ]
+   
+    \addplot[
+    color=red,
+    mark=square,
+    ]
+    coordinates {
+    (104,175.907)(99,140.636)(98,95.5367)(96,80.4402)(94,64.6069)(92,47.4998)
+    
+    };
+    
+  \end{axis}
+\end{tikzpicture}
+
+\subsubsection{OBSERVATIONS}
+.
+
+
+    As we can observe from the table that decrease in the resolution of video (i.e. decreasing the size of each frame) then the  runtime decreases because the time taken for computing the differed pixels from the image takes less time as the size of frame(Matrix) decreases.
+    
+    
+    And we can observe that utility decreases with decrease in resolution because with compression of image some data will be lost which will result in higher error,so decrease in utility.
+    
+.
+
+
+\subsection{method3}
+.
+
+\subsubsection{TABLE}
+\begin{center}
+    \begin{tabular}{||c| c  |c | c|c||} 
+    \hline
+    thds&time&utility&cpu per.&mem per.\\[0.8ex]
+    \hline\hline
+    2 &112&10& 80.3 &3.64\\[0.5ex]
+    \hline
+    3  &      101 &10&     80.8 &   3.64\\[0.5ex]
+    \hline
+    4  &      106 &10&     81.3 &   3.65  \\[0.5ex]
+    \hline
+    5 &       108  &10&    80.2 &   3.65\\[0.5ex]
+    \hline
+    6  &      107 &10&     82.8 &   3.65\\[0.5ex]
+    \hline
+    7 &       110&10&      81.7  &  3.65\\[0.5ex]
+    \hline
+    8 &       112 &10&     80.3 &   3.65\\[0.5ex]
+    \hline
+    16 &      104&10&      81.6 &   3.65\\[0.5ex]
+    \hline
+    25 &      109 &10&     80.0 &   3.67\\[0.5ex]
+    \hline
+    40 &      122 &10&     75.3 &   3.68\\[0.5ex]
+    \hline
+    60 &      132&10&      71.6  &  3.70\\[0.5ex]
+    \hline
+    90 &      141 &10&     70.0 &   3.70\\[0.5ex]
+    \hline
+\end{tabular}
+\end{center}
+
+
+.
+
+\subsubsection{GRAPHS}
+\begin{tikzpicture}
+  \begin{axis}[
+    xmin=100, xmax=145,
+    ymin=5, ymax=15,
+    xlabel=$time$,
+    ylabel=$utility$
+  ]
+   
+    \addplot[
+    color=violet,
+    mark=square,
+    ]
+    coordinates {
+    (112,10)(101,10)(106,10)(108,10)(107,10)(110,10)(112,10)(104,10)(109,10)(122,10)(132,10)(141,10)
+    
+    };
+    
+  \end{axis}
+\end{tikzpicture}
+
+
+.
+
+\begin{tikzpicture}
+  \begin{axis}[
+    xmin=1, xmax=12,
+    ymin=78, ymax=84,
+    xlabel=$threads$,
+    ylabel=$cpu per.$
+  ]
+   
+    \addplot[
+    color=red,
+    mark=square,
+    ]
+    coordinates {
+    (2,80.3)(3,80.8)(4,81.3)(5,80.2)(6,82.8)(7,81.7)(8,80.3)(10,81.6)
+    
+    };
+    
+  \end{axis}
+\end{tikzpicture}
+
+.
+\subsubsection{OBSERVATIONS}
+.
+
+Utility is constant because there will be no error as we are taking the same frames.
+We can observe that cpu utilization is proportional to the no.of threads upto some threads.As no.of threads increases joining of threads takes time therefore cpu utilization decreases after a certain no.of threads.From that reason time decreases and then increases.
+
+\subsection{method4}
+.
+
+\subsubsection{TABLE}
+\begin{center}
+    \begin{tabular}{||c| c  |c | c|c||} 
+    \hline
+    thds&time&utility&cpu per.&mem per.\\[0.8ex]
+    \hline\hline
+    2 &91&10& 83.1 &5.66\\[0.5ex]
+    \hline
+    3  &      94 &10&     84.3 &   5.57\\[0.5ex]
+    \hline
+    5 &       95  &9.997&    85.7 &   5.68\\[0.5ex]
+    \hline
+    7 &       98&9.997&      84.8  &  5.77\\[0.5ex]
+    \hline
+    10 &       99 &9.997&     87.0 &   6.05\\[0.5ex]
+    \hline
+    20&      100&9.997&      85.4 &   6.70\\[0.5ex]
+    \hline
+    40 &      99&9.997&     86.3 &   7.91\\[0.5ex]
+    \hline
+    60 &      103&9.997&      84.8  &  9.17\\[0.5ex]
+    \hline
+    100 &      105 &9.997&     709.4 &   11.76\\[0.5ex]
+    \hline
+\end{tabular}
+\end{center}
+.
+
+\subsubsection{GRAPHS}
+\begin{tikzpicture}
+  \begin{axis}[
+    xmin=90, xmax=106,
+    ymin=5, ymax=15,
+    xlabel=$time$,
+    ylabel=$utility$
+  ]
+   
+    \addplot[
+    color=violet,
+    mark=square,
+    ]
+    coordinates {
+    (91,10)(94,10)(95,9.997)(98,9.997)(99,9.997)(100,9.997)(99,9.997)(103,9.997)(105,9.997)
+    
+    };
+    
+  \end{axis}
+\end{tikzpicture}
+
+
+.
+
+\begin{tikzpicture}
+  \begin{axis}[
+    xmin=1, xmax=12,
+    ymin=82, ymax=88,
+    xlabel=$threads$,
+    ylabel=$cpu per.$
+  ]
+   
+    \addplot[
+    color=red,
+    mark=square,
+    ]
+    coordinates {
+    (2,83.1)(3,84.3)(5,85.7)(7,84.8)(10,87)
+    
+    };
+    
+  \end{axis}
+\end{tikzpicture}
+
+.
+
+\subsubsection{OBSERVATIONS}
+.
+
+Utility is constant because there will be no error as we are taking the same frames.
+we can observe that cpu utilization increases with the no.of threads.As no.of threads increases joining takes time but x threads will run simultaneously so that time decreases.From  that time is almost similar for different types of threads .
+
+
+\end{document}
